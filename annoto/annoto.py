@@ -14,7 +14,6 @@ from xblock.fields import Scope, String, Boolean
 from xblock.fragment import Fragment
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
-from openedx.core.djangoapps.course_groups.cohorts import get_cohort
 from openedx.core.lib.courses import course_image_url
 from student.roles import CourseInstructorRole, CourseStaffRole, GlobalStaff
 
@@ -159,6 +158,9 @@ class AnnotoXBlock(StudioEditableXBlockMixin, XBlock):
         return fragment
 
     def _base_view(self, context=None):
+        # This must be imported within this function, otherwise the build breaks.
+        from openedx.core.djangoapps.course_groups.cohorts import get_cohort
+
         annoto_auth = self.get_annoto_settings()
         horizontal, vertical = self.get_position()
         translator = self.runtime.service(self, 'i18n').translator
